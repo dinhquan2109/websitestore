@@ -5,6 +5,7 @@ import { ProductDescription } from "components/product/product-description";
 import { HIDDEN_PRODUCT_TAG } from "lib/constants";
 import { getProduct, getProductRecommendations } from "lib/shopify";
 import type { Image } from "lib/shopify/types";
+import { toViProductTitle } from "lib/vi-storefront";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -22,7 +23,7 @@ export async function generateMetadata(props: {
   const indexable = !product.tags.includes(HIDDEN_PRODUCT_TAG);
 
   return {
-    title: product.seo.title || product.title,
+    title: product.seo.title || toViProductTitle(product.title),
     description: product.seo.description || product.description,
     robots: {
       index: indexable,
@@ -117,7 +118,7 @@ async function RelatedProducts({ id }: { id: string }) {
 
   return (
     <div className="py-8">
-      <h2 className="mb-4 text-2xl font-bold">Related Products</h2>
+      <h2 className="mb-4 text-2xl font-bold">Sản phẩm liên quan</h2>
       <ul className="flex w-full gap-4 overflow-x-auto pt-1">
         {relatedProducts.map((product) => (
           <li
@@ -130,9 +131,9 @@ async function RelatedProducts({ id }: { id: string }) {
               prefetch={true}
             >
               <GridTileImage
-                alt={product.title}
+                alt={toViProductTitle(product.title)}
                 label={{
-                  title: product.title,
+                  title: toViProductTitle(product.title),
                   amount: product.priceRange.maxVariantPrice.amount,
                   currencyCode: product.priceRange.maxVariantPrice.currencyCode,
                 }}

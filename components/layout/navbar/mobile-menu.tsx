@@ -7,9 +7,16 @@ import { Fragment, Suspense, useEffect, useState } from "react";
 
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Menu } from "lib/shopify/types";
+import { toViMenuTitle } from "lib/vi-storefront";
 import Search, { SearchSkeleton } from "./search";
 
-export default function MobileMenu({ menu }: { menu: Menu[] }) {
+export default function MobileMenu({
+  menu,
+  userEmail,
+}: {
+  menu: Menu[];
+  userEmail: string | null;
+}) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [isOpen, setIsOpen] = useState(false);
@@ -34,7 +41,7 @@ export default function MobileMenu({ menu }: { menu: Menu[] }) {
     <>
       <button
         onClick={openMobileMenu}
-        aria-label="Open mobile menu"
+        aria-label="Mở menu điện thoại"
         className="flex h-11 w-11 items-center justify-center rounded-md border border-neutral-200 text-black transition-colors md:hidden dark:border-neutral-700 dark:text-white"
       >
         <Bars3Icon className="h-4" />
@@ -66,7 +73,7 @@ export default function MobileMenu({ menu }: { menu: Menu[] }) {
                 <button
                   className="mb-4 flex h-11 w-11 items-center justify-center rounded-md border border-neutral-200 text-black transition-colors dark:border-neutral-700 dark:text-white"
                   onClick={closeMobileMenu}
-                  aria-label="Close mobile menu"
+                  aria-label="Đóng menu điện thoại"
                 >
                   <XMarkIcon className="h-6" />
                 </button>
@@ -88,12 +95,51 @@ export default function MobileMenu({ menu }: { menu: Menu[] }) {
                           prefetch={true}
                           onClick={closeMobileMenu}
                         >
-                          {item.title}
+                          {toViMenuTitle(item.title)}
                         </Link>
                       </li>
                     ))}
                   </ul>
                 ) : null}
+                <ul className="mt-6 flex w-full flex-col border-t border-neutral-200 pt-4 dark:border-neutral-700">
+                  {userEmail ? (
+                    <>
+                      <li className="py-2 text-sm text-neutral-500 dark:text-neutral-400">
+                        {userEmail}
+                      </li>
+                      <li className="py-2 text-xl">
+                        <Link
+                          href="/auth/dang-xuat"
+                          prefetch={false}
+                          onClick={closeMobileMenu}
+                        >
+                          Đăng xuất
+                        </Link>
+                      </li>
+                    </>
+                  ) : (
+                    <>
+                      <li className="py-2 text-xl">
+                        <Link
+                          href="/dang-nhap"
+                          prefetch={true}
+                          onClick={closeMobileMenu}
+                        >
+                          Đăng nhập
+                        </Link>
+                      </li>
+                      <li className="py-2 text-xl">
+                        <Link
+                          href="/dang-ky"
+                          prefetch={true}
+                          onClick={closeMobileMenu}
+                        >
+                          Đăng ký
+                        </Link>
+                      </li>
+                    </>
+                  )}
+                </ul>
               </div>
             </Dialog.Panel>
           </Transition.Child>

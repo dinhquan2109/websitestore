@@ -1,7 +1,10 @@
 import CartModal from "components/cart/modal";
 import LogoSquare from "components/logo-square";
+import { NavbarAuth } from "components/layout/navbar/navbar-auth";
 import { getMenu } from "lib/shopify";
+import { createSupabaseServerClient } from "lib/supabase/server";
 import { Menu } from "lib/shopify/types";
+import { toViMenuTitle } from "lib/vi-storefront";
 import Link from "next/link";
 import { Suspense } from "react";
 import MobileMenu from "./mobile-menu";
@@ -11,12 +14,14 @@ const { SITE_NAME } = process.env;
 
 export async function Navbar() {
   const menu = await getMenu("next-js-frontend-header-menu");
+  const supabase = await createSupabaseServerClient();
+  const user = supabase ? (await supabase.auth.getUser()).data.user : null;
 
   return (
     <nav className="relative flex items-center justify-between p-4 lg:px-6">
       <div className="block flex-none md:hidden">
         <Suspense fallback={null}>
-          <MobileMenu menu={menu} />
+          <MobileMenu menu={menu} userEmail={user?.email ?? null} />
         </Suspense>
       </div>
       <div className="flex w-full items-center">
@@ -40,7 +45,7 @@ export async function Navbar() {
                     prefetch={true}
                     className="text-neutral-500 underline-offset-4 hover:text-black hover:underline dark:text-neutral-400 dark:hover:text-neutral-300"
                   >
-                    {item.title}
+                    {toViMenuTitle(item.title)}
                   </Link>
                 </li>
               ))}
@@ -52,7 +57,8 @@ export async function Navbar() {
             <Search />
           </Suspense>
         </div>
-        <div className="flex justify-end md:w-1/3">
+        <div className="flex items-center justify-end gap-3 md:w-1/3">
+          <NavbarAuth user={user} />
           <CartModal />
         </div>
       </div>

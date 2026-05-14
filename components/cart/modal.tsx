@@ -7,6 +7,7 @@ import LoadingDots from "components/loading-dots";
 import Price from "components/price";
 import { DEFAULT_OPTION } from "lib/constants";
 import { createUrl } from "lib/utils";
+import { toViProductTitle, toViVariantTitle } from "lib/vi-storefront";
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment, useEffect, useRef, useState } from "react";
@@ -49,7 +50,7 @@ export default function CartModal() {
 
   return (
     <>
-      <button aria-label="Open cart" onClick={openCart}>
+      <button aria-label="Mở giỏ hàng" onClick={openCart}>
         <OpenCart quantity={cart?.totalQuantity} />
       </button>
       <Transition show={isOpen}>
@@ -76,8 +77,8 @@ export default function CartModal() {
           >
             <Dialog.Panel className="fixed bottom-0 right-0 top-0 flex h-full w-full flex-col border-l border-neutral-200 bg-white/80 p-6 text-black backdrop-blur-xl md:w-[390px] dark:border-neutral-700 dark:bg-black/80 dark:text-white">
               <div className="flex items-center justify-between">
-                <p className="text-lg font-semibold">My Cart</p>
-                <button aria-label="Close cart" onClick={closeCart}>
+                <p className="text-lg font-semibold">Giỏ hàng</p>
+                <button aria-label="Đóng giỏ hàng" onClick={closeCart}>
                   <CloseCart />
                 </button>
               </div>
@@ -86,7 +87,7 @@ export default function CartModal() {
                 <div className="mt-20 flex w-full flex-col items-center justify-center overflow-hidden">
                   <ShoppingCartIcon className="h-16" />
                   <p className="mt-6 text-center text-2xl font-bold">
-                    Your cart is empty.
+                    Giỏ hàng của bạn đang trống.
                   </p>
                 </div>
               ) : (
@@ -137,7 +138,9 @@ export default function CartModal() {
                                     alt={
                                       item.merchandise.product.featuredImage
                                         .altText ||
-                                      item.merchandise.product.title
+                                      toViProductTitle(
+                                        item.merchandise.product.title,
+                                      )
                                     }
                                     src={
                                       item.merchandise.product.featuredImage.url
@@ -151,12 +154,16 @@ export default function CartModal() {
                                 >
                                   <div className="flex flex-1 flex-col text-base">
                                     <span className="leading-tight">
-                                      {item.merchandise.product.title}
+                                      {toViProductTitle(
+                                        item.merchandise.product.title,
+                                      )}
                                     </span>
                                     {item.merchandise.title !==
                                     DEFAULT_OPTION ? (
                                       <p className="text-sm text-neutral-500 dark:text-neutral-400">
-                                        {item.merchandise.title}
+                                        {toViVariantTitle(
+                                          item.merchandise.title,
+                                        )}
                                       </p>
                                     ) : null}
                                   </div>
@@ -195,7 +202,7 @@ export default function CartModal() {
                   </ul>
                   <div className="py-4 text-sm text-neutral-500 dark:text-neutral-400">
                     <div className="mb-3 flex items-center justify-between border-b border-neutral-200 pb-1 dark:border-neutral-700">
-                      <p>Taxes</p>
+                      <p>Thuế</p>
                       <Price
                         className="text-right text-base text-black dark:text-white"
                         amount={cart.cost.totalTaxAmount.amount}
@@ -203,11 +210,11 @@ export default function CartModal() {
                       />
                     </div>
                     <div className="mb-3 flex items-center justify-between border-b border-neutral-200 pb-1 pt-1 dark:border-neutral-700">
-                      <p>Shipping</p>
-                      <p className="text-right">Calculated at checkout</p>
+                      <p>Vận chuyển</p>
+                      <p className="text-right">Tính khi thanh toán</p>
                     </div>
                     <div className="mb-3 flex items-center justify-between border-b border-neutral-200 pb-1 pt-1 dark:border-neutral-700">
-                      <p>Total</p>
+                      <p>Tổng cộng</p>
                       <Price
                         className="text-right text-base text-black dark:text-white"
                         amount={cart.cost.totalAmount.amount}
@@ -250,7 +257,7 @@ function CheckoutButton() {
       type="submit"
       disabled={pending}
     >
-      {pending ? <LoadingDots className="bg-white" /> : "Proceed to Checkout"}
+      {pending ? <LoadingDots className="bg-white" /> : "Thanh toán"}
     </button>
   );
 }

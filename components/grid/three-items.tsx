@@ -1,6 +1,7 @@
 import { GridTileImage } from "components/grid/tile";
 import { getCollectionProducts } from "lib/shopify";
 import type { Product } from "lib/shopify/types";
+import { toViProductTitle } from "lib/vi-storefront";
 import Link from "next/link";
 
 function ThreeItemGridItem({
@@ -34,10 +35,10 @@ function ThreeItemGridItem({
               : "(min-width: 768px) 33vw, 100vw"
           }
           priority={priority}
-          alt={item.title}
+          alt={toViProductTitle(item.title)}
           label={{
             position: size === "full" ? "center" : "bottom",
-            title: item.title as string,
+            title: toViProductTitle(item.title),
             amount: item.priceRange.maxVariantPrice.amount,
             currencyCode: item.priceRange.maxVariantPrice.currencyCode,
           }}

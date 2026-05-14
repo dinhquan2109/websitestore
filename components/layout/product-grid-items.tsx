@@ -1,6 +1,7 @@
 import Grid from "components/grid";
 import { GridTileImage } from "components/grid/tile";
 import { Product } from "lib/shopify/types";
+import { toViProductTitle } from "lib/vi-storefront";
 import Link from "next/link";
 
 export default function ProductGridItems({
@@ -18,9 +19,9 @@ export default function ProductGridItems({
             prefetch={true}
           >
             <GridTileImage
-              alt={product.title}
+              alt={toViProductTitle(product.title)}
               label={{
-                title: product.title,
+                title: toViProductTitle(product.title),
                 amount: product.priceRange.maxVariantPrice.amount,
                 currencyCode: product.priceRange.maxVariantPrice.currencyCode,
               }}

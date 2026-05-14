@@ -1,10 +1,11 @@
 import { getCollection, getCollectionProducts } from "lib/shopify";
+import { defaultSort, sorting } from "lib/constants";
+import { toViCollectionTitle } from "lib/vi-storefront";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import Grid from "components/grid";
 import ProductGridItems from "components/layout/product-grid-items";
-import { defaultSort, sorting } from "lib/constants";
 
 export async function generateMetadata(props: {
   params: Promise<{ collection: string }>;
@@ -14,12 +15,14 @@ export async function generateMetadata(props: {
 
   if (!collection) return notFound();
 
+  const viTitle = toViCollectionTitle(collection.title);
+
   return {
-    title: collection.seo?.title || collection.title,
+    title: collection.seo?.title || viTitle,
     description:
       collection.seo?.description ||
       collection.description ||
-      `${collection.title} products`,
+      `${viTitle} — sản phẩm`,
   };
 }
 
@@ -41,7 +44,9 @@ export default async function CategoryPage(props: {
   return (
     <section>
       {products.length === 0 ? (
-        <p className="py-3 text-lg">{`No products found in this collection`}</p>
+        <p className="py-3 text-lg">
+          Không tìm thấy sản phẩm trong bộ sưu tập này.
+        </p>
       ) : (
         <Grid className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           <ProductGridItems products={products} />

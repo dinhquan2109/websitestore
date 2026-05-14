@@ -2,6 +2,7 @@
 
 import clsx from "clsx";
 import { Menu } from "lib/shopify/types";
+import { toViMenuTitle } from "lib/vi-storefront";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -25,7 +26,7 @@ export function FooterMenuItem({ item }: { item: Menu }) {
           },
         )}
       >
-        {item.title}
+        {toViMenuTitle(item.title)}
       </Link>
     </li>
   );

@@ -2,11 +2,16 @@ import clsx from "clsx";
 import { Suspense } from "react";
 
 import { getCollections } from "lib/shopify";
+import { toViCollectionTitle } from "lib/vi-storefront";
 import FilterList from "./filter";
 
 async function CollectionList() {
   const collections = await getCollections();
-  return <FilterList list={collections} title="Collections" />;
+  const list = collections.map((c) => ({
+    title: toViCollectionTitle(c.title),
+    path: c.path,
+  }));
+  return <FilterList list={list} title="Bộ sưu tập" />;
 }
 
 const skeleton = "mb-3 h-4 w-5/6 animate-pulse rounded-sm";

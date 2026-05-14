@@ -1,4 +1,5 @@
 import { getCollectionProducts } from "lib/shopify";
+import { toViProductTitle } from "lib/vi-storefront";
 import Link from "next/link";
 import { GridTileImage } from "./grid/tile";
 
@@ -26,9 +27,9 @@ export async function Carousel() {
               className="relative h-full w-full"
             >
               <GridTileImage
-                alt={product.title}
+                alt={toViProductTitle(product.title)}
                 label={{
-                  title: product.title,
+                  title: toViProductTitle(product.title),
                   amount: product.priceRange.maxVariantPrice.amount,
                   currencyCode: product.priceRange.maxVariantPrice.currencyCode,
                 }}
